@@ -1,0 +1,37 @@
+group 'SolarWebBIM'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+apply plugin: 'war'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+
+    compile 'log4j:log4j:+'
+    compile 'javax.servlet.jsp.jstl:javax.servlet.jsp.jstl-api:+'
+    compile 'com.h2database:h2:+'
+    compileOnly 'org.projectlombok:lombok:+'
+    testCompile 'org.projectlombok:lombok:+'
+
+    // https://mvnrepository.com/artifact/javax.servlet/jstl
+    compile group: 'javax.servlet', name: 'jstl', version: '1.2'
+
+    providedCompile 'org.apache.tomcat:tomcat-api:+'
+    providedCompile 'org.apache.tomcat:tomcat-jsp-api:+'
+    providedCompile 'org.apache.tomcat:tomcat-catalina:+'
+
+    //Unit tests
+    testCompile 'junit:junit:+'
+    testCompile 'org.hamcrest:hamcrest-core:+'
+    testCompile 'org.hamcrest:hamcrest-library:+'
+    testCompile 'org.mockito:mockito-core:+'
+    // Jersey
+    compile 'org.glassfish.jersey.containers:jersey-container-servlet:+'
+    compile 'org.glassfish.jersey.media:jersey-media-moxy:+'
+
+    // Jackson
+    compile 'com.fasterxml.jackson.core:jackson-databind:+'
+}
