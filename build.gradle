@@ -34,4 +34,6 @@ dependencies {
 
     // Jackson
     compile 'com.fasterxml.jackson.core:jackson-databind:+'
+    // https://mvnrepository.com/artifact/com.sun.xml.security/xml-security-impl
+    compile group: 'com.sun.xml.security', name: 'xml-security-impl', version: '1.0'
 }

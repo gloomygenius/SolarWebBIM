@@ -5,6 +5,9 @@ import exceptions.DownloadException;
 import lombok.AllArgsConstructor;
 import org.apache.log4j.Logger;
 
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLSession;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -32,10 +35,11 @@ public class Downloader {
         }
     }
 
-    private String getAuthResponse(String address) throws IOException {
-        log.info("Открываем авторизованное соединение: " + address);
+    private String getAuthResponse(String address) throws IOException, DownloadException {
+        log.info("Opening auth connection: " + address);
         URL url = new URL(address);
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+        connection.setHostnameVerifier(new NullHostNameVerifier());
         connection.setReadTimeout(60 * 1000);
         connection.setConnectTimeout(60 * 1000);
         String authorization = login + ":" + password;
@@ -45,46 +49,47 @@ public class Downloader {
     }
 
     private String getLinkFromResponse(String responce) throws DownloadException {
-        log.info("Парсим ответ");
+        log.info("Parsing response...");
         Pattern pattern = Pattern.compile("a href=\\\"(.+)\\\"");
         Matcher matcher = pattern.matcher(responce);
         String link;
         if (matcher.find()) {
             link = matcher.group(1);
         } else {
-            throw new DownloadException("Responce can not be parsed");
+            throw new DownloadException("Response can not be parsed");
         }
         return link;
     }
 
     private String getResponseFromURL(String url) throws IOException, DownloadException {
 
-        log.info("Открываем соединение: " + url);
+        log.info("Opening auth connection: " + url);
         URL object = new URL(url);
-        HttpURLConnection connection = (HttpURLConnection) object.openConnection();
+        HttpsURLConnection connection = (HttpsURLConnection) object.openConnection();
+        connection.setHostnameVerifier(new NullHostNameVerifier());
         connection.setReadTimeout(300 * 1000);
         connection.setConnectTimeout(300 * 1000);
 
         int responseCode = connection.getResponseCode();
         switch (responseCode) {
             case 200:
-                log.info("Ответ сервера 200");
+                log.info("Response code 200");
                 log.info("Файл успешно загружен");
                 return getTextResponse(connection);
             case 302:
-                log.info("Ответ сервера 302");
+                log.info("Response code 302");
                 return (getLinkFromResponse(getTextResponse(connection)));
             case 401:
-                log.info("Ответ сервера 401");
+                log.info("Response code 401");
                 return getAuthResponse(url);
             default:
-                log.info("Ответ сервера " + responseCode);
+                log.info("Response code " + responseCode);
                 return String.valueOf(responseCode);
 
         }
     }
 
-    private String getTextResponse(HttpURLConnection connection) {
+    private String getTextResponse(HttpsURLConnection connection) throws DownloadException {
         StringBuilder builder = new StringBuilder();
 
         String encoding = connection.getContentEncoding() == null ? "UTF-8"
@@ -97,8 +102,13 @@ public class Downloader {
                 builder.append(nextString).append("\r\n");
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new DownloadException(e);
         }
         return builder.toString();
+    }
+}
+class NullHostNameVerifier implements HostnameVerifier {
+    public boolean verify(String hostname, SSLSession session) {
+        return true;
     }
 }
