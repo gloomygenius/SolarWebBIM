@@ -1,7 +1,7 @@
-<%--suppress JspAbsolutePathInspection --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
+
 <!DOCTYPE html>
 <html lang="${sessionScope.language}">
 <head>
@@ -23,7 +23,7 @@
         <jsp:include page="${contextPath}/WEB-INF/jsp/common/navigation.jsp"/>
 
         <div class="col-xs-10 col-md-10 col-lg-10">
-                    <h1>Solar  Web BIM, Polytech</h1><br>
+            Let's put content here!
         </div>
     </div>
 </div>
