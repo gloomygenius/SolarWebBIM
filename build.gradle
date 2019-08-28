@@ -6,43 +6,38 @@ apply plugin: 'war'
 
 repositories {
     mavenCentral()
+    maven {
+        url "https://artifacts.unidata.ucar.edu/content/repositories/unidata-releases/"
+    }
 }
 
 dependencies {
-    compile files('lib/netcdfAll-4.6.jar')
-    compile 'log4j:log4j:+'
-    compile 'javax.servlet.jsp.jstl:javax.servlet.jsp.jstl-api:+'
-    compile 'com.h2database:h2:+'
-    compileOnly 'org.projectlombok:lombok:+'
-    testCompile 'org.projectlombok:lombok:+'
+    implementation 'edu.ucar:netcdf4:5.0.0'
+    implementation 'log4j:log4j:+'
+    implementation 'javax.servlet.jsp.jstl:javax.servlet.jsp.jstl-api:+'
+    implementation 'com.h2database:h2:+'
+    implementation 'javax.servlet:jstl:1.2'
+    // Jersey
+    implementation 'org.glassfish.jersey.containers:jersey-container-servlet:+'
+    implementation 'org.glassfish.jersey.media:jersey-media-moxy:+'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:+'
+    implementation 'com.sun.xml.security:xml-security-impl:1.0'
+    implementation 'org.jblas:jblas:1.2.4'
 
-    // https://mvnrepository.com/artifact/javax.servlet/jstl
-    compile group: 'javax.servlet', name: 'jstl', version: '1.2'
-
+    compileOnly 'org.projectlombok:lombok:1.18.8'
+    testCompileOnly 'org.projectlombok:lombok:1.18.8'
+    annotationProcessor 'org.projectlombok:lombok:1.18.8'
     providedCompile 'org.apache.tomcat:tomcat-api:+'
     providedCompile 'org.apache.tomcat:tomcat-jsp-api:+'
     providedCompile 'org.apache.tomcat:tomcat-catalina:+'
 
     //Unit tests
-    testCompile 'junit:junit:+'
-    testCompile 'org.hamcrest:hamcrest-core:+'
-    testCompile 'org.hamcrest:hamcrest-library:+'
-    testCompile 'org.mockito:mockito-core:+'
-    // Jersey
-    compile 'org.glassfish.jersey.containers:jersey-container-servlet:+'
-    compile 'org.glassfish.jersey.media:jersey-media-moxy:+'
+    testImplementation 'junit:junit:+'
+    testImplementation 'org.hamcrest:hamcrest-core:+'
+    testImplementation 'org.hamcrest:hamcrest-library:+'
+    testImplementation 'org.mockito:mockito-core:+'
 
-    // Jackson
-    compile 'com.fasterxml.jackson.core:jackson-databind:+'
-    // https://mvnrepository.com/artifact/com.sun.xml.security/xml-security-impl
-    compile group: 'com.sun.xml.security', name: 'xml-security-impl', version: '1.0'
-
-    // https://mvnrepository.com/artifact/org.jblas/jblas
-    compile group: 'org.jblas', name: 'jblas', version: '1.2.4'
-
-    //effective math lab
-    compile group: 'org.ejml', name: 'all', version: '0.30'
-
-    //csv lib
-    compile 'org.apache.commons:commons-csv:+'
+    //effective math lib
+    implementation 'org.ejml:all:0.30'
+    implementation 'org.apache.commons:commons-csv:+'
 }
